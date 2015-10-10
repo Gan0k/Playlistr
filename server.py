@@ -10,7 +10,7 @@ def form():
 
 @app.route('/', methods=['POST'])
 def form_post():
-	return playlistr.make_playlist(request.form.get['text'])
+	return playlistr.make_playlist(request.form.get('text'))
 
 if __name__ == "__main__":
 	app.run()
