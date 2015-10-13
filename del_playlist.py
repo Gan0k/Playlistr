@@ -41,10 +41,12 @@ list_response = yt.playlists().list(
 		maxResults=50
 	).execute()
 
-print(len(list_response['items']))
+deleted = 0
 for elem in list_response['items']:
 	if elem['snippet']['title'] == 'Playlistr':
+		deleted = deleted + 1
 		delete_response = yt.playlists().delete(
 				id=elem['id']
 			).execute()
 
+print ("Deleted", deleted, "playlists")
