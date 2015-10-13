@@ -11,7 +11,7 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
-from oauth2client.tools import run_flow
+from oauth2client.tools import run_flow, argparser
 
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
@@ -37,9 +37,11 @@ yt = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
 
 list_response = yt.playlists().list(
 		part="snippet,status",
-	 	mine="true"	
+		mine="true",
+		maxResults=50
 	).execute()
 
+print(len(list_response['items']))
 for elem in list_response['items']:
 	if elem['snippet']['title'] == 'Playlistr':
 		delete_response = yt.playlists().delete(
