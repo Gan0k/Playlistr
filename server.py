@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for 
-import playlistr
+import playlistr_main
 
 app = Flask(__name__)
 
