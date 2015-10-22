@@ -1,4 +1,4 @@
 Playlistr
 =========
 
-Local Hack Day Project. September 2015.
+Local Hack Day Project. October 10th, 2015.
