@@ -5,7 +5,7 @@ import httplib2
 import os
 import sys
 
-import keys
+from keys import *
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -87,7 +87,7 @@ def create_playlist(ids):
 				)
 			).execute()
 
-	return playlistid 
+	return playlistid
 
 def make_playlist(tracklist):
 	videos = []
