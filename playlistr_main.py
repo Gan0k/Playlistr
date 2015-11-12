@@ -13,8 +13,6 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 
-YOUTUBE_API_SERVICE_NAME = "youtube"
-YOUTUBE_API_VERSION = "v3"
 CLIENT_SECRETS_FILE = "client_secrets.json"
 MISSING_CLIENT_SECRETS_MESSAGE = "WARNING: Please configure OAuth 2.0".format(os.path.abspath(os.path.join(os.path.dirname(__file__), CLIENT_SECRETS_FILE)))
 YOUTUBE_READ_WRITE_SCOPE = "https://www.googleapis.com/auth/youtube"
