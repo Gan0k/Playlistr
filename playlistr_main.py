@@ -103,5 +103,5 @@ def make_playlist(tracklist):
 			videos.append(youtube_search(youtube,line[i:], 1))
 		except(HttpError, e):
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
-	return "https://www.youtube.com/embed/" + videos[0] + '?list=' + create_playlist(videos)
+	return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + create_playlist(videos)
 
