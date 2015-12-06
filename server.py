@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for
+from flask import Flask, request, render_template, url_for, redirect
 import playlistr_main as playlistr
 
 app = Flask(__name__)
@@ -11,7 +11,8 @@ def form():
 @app.route('/', methods=['POST'])
 def form_post():
 	pl = playlistr.make_playlist(request.form.get('text'))
-	return render_template('results.html', p=pl)
+	#return render_template('results.html', p=pl)
+	return redirect(pl, code=302)
 
 if __name__ == "__main__":
 	app.run(debug=True)
