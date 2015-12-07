@@ -107,6 +107,12 @@ def make_playlist(tracklist):
 		except (HttpError, e):
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
+		pl = []
+		try:
+			pl = create_playlist(videos)
+		except (HttpError, e):
+			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+
 	if not videos: return 'No videos found'
-	else: return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + create_playlist(videos)
+	else: return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + pl
 
