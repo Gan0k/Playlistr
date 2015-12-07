@@ -17,4 +17,4 @@ def form_post():
 	else: return redirect(pl, code=302)
 
 if __name__ == "__main__":
-	app.run()
+	app.run(debug=True)

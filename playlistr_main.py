@@ -102,7 +102,7 @@ def make_playlist(tracklist):
 		try:
 			search = youtube_search(youtube,line[i:], 1)
 			if search:
-				videos.append(search)
+				videos.append(search[0])
 
 		except (HttpError, e):
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
