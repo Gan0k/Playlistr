@@ -36,7 +36,7 @@ def youtube_search(yt, query, max_results):
 		if search_result["id"]["kind"] == "youtube#video":
 			videos.append(search_result["id"]["videoId"])
 
-	return videos[0]
+	return videos
 
 def create_playlist(ids):
 	flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
@@ -100,8 +100,13 @@ def make_playlist(tracklist):
 		print(line[i:])
 
 		try:
-			videos.append(youtube_search(youtube,line[i:], 1))
-		except(HttpError, e):
+			search = youtube_search(youtube,line[i:], 1)
+			if search:
+				videos.append(search)
+
+		except (HttpError, e):
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
-	return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + create_playlist(videos)
+
+	if not videos: return 'No videos found'
+	else: return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + create_playlist(videos)
 
