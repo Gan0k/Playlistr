@@ -12,7 +12,6 @@ def form():
 @app.route('/', methods=['POST'])
 def form_post():
 	pl = playlistr.make_playlist(request.form.get('text'))
-	#return render_template('results.html', p=pl)
 	if pl == notfound: return notfound
 	else: return redirect(pl, code=302)
 
