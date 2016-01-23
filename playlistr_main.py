@@ -1,25 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import httplib2
-import os
-import sys
-
 from keys import *
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.file import Storage
-from oauth2client.tools import argparser, run_flow
 
-CLIENT_SECRETS_FILE = "client_secrets.json"
-MISSING_CLIENT_SECRETS_MESSAGE = "WARNING: Please configure OAuth 2.0".format(os.path.abspath(os.path.join(os.path.dirname(__file__), CLIENT_SECRETS_FILE)))
-YOUTUBE_READ_WRITE_SCOPE = "https://www.googleapis.com/auth/youtube"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
+YOUTUBE_PLAYLIST_LINK = 'http://www.youtube.com/watch_videos?video_ids='
 
-def youtube_search(yt, query, max_results):
+def youtube_search(yt, query, max_results=1):
 	# Call the search.list method to retrieve results matching the specified
 	# query term.
 	search_response = yt.search().list(
@@ -38,55 +29,6 @@ def youtube_search(yt, query, max_results):
 
 	return videos
 
-def create_playlist(ids):
-	flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
-		message=MISSING_CLIENT_SECRETS_MESSAGE,
-		scope=YOUTUBE_READ_WRITE_SCOPE)
-
-	storage = Storage("%s-oauth2.json" % sys.argv[0])
-	credentials = storage.get()
-
-	if credentials is None or credentials.invalid:
-		flags = argparser.parse_args()
-		credentials = run_flow(flow, storage, flags)
-
-	yt = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-		http=credentials.authorize(httplib2.Http()))
-
-	# This code creates a new, private playlist in the authorized user's channel.
-	playlists_response = yt.playlists().insert(
-			part="snippet,status",
-			body=dict(
-				snippet=dict(
-						title="Playlistr",
-						description="Playlist Created by Playlisr!"
-				),
-				status=dict(
-					privacyStatus="public"
-				)
-			)
-		).execute()
-
-	playlistid = playlists_response["id"]
-	for idvideo in ids:
-		response = yt.playlistItems().insert(
-				part="snippet,status",
-				body=dict(
-					snippet=dict(
-							playlistId=playlistid,
-							resourceId=dict(
-								kind='youtube#video',
-								videoId=idvideo
-							)
-					),
-					status=dict(
-						privacyStatus="public"
-					)
-				)
-			).execute()
-
-	return playlistid
-
 def make_playlist(tracklist):
 	videos = []
 	youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
@@ -100,13 +42,14 @@ def make_playlist(tracklist):
 		print(line[i:])
 
 		try:
-			search = youtube_search(youtube,line[i:], 1)
+			search = youtube_search(youtube,line[i:])
 			if search:
-				videos.append(search[0])
+				videos.append(search[0]) #get first result
 
 		except (HttpError, e):
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
 	if not videos: return 'No videos found'
-	else: return 'https://www.youtube.com/watch?v=' + videos[0] + '&list=' + create_playlist(videos)
+	else:
+		return YOUTUBE_PLAYLIST_LINK + ','.join(videos)
 
