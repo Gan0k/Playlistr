@@ -9,7 +9,7 @@ install:
 # install dependencies from requirements.txt
 #   - pip install -r requirements.txt
 # run tests
-script: python -m unittest
+script: python -m unittest discover
 # more information on configuring openshift deployments
 # http://docs.travis-ci.com/user/deployment/openshift/
 deploy:
