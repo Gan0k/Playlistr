@@ -36,9 +36,13 @@ def make_playlist(tracklist):
 		developerKey=DEVELOPER_KEY)
 
 	for line in tracklist.splitlines():
+		if not line: continue
+
 		i = 0
-		while line[i].isdigit() or line[i] is "." or line[i] is " ":
+		while i < len(line) and line[i].isdigit() or line[i] is "." or line[i] is " ":
 			i += 1;
+
+		if i >= len(line): continue
 
 		print(line[i:])
 
