@@ -3,6 +3,7 @@
 
 import os
 import logging
+import re
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -40,18 +41,22 @@ def make_playlist(tracklist):
 		developerKey=DEVELOPER_KEY)
 
 	for line in tracklist.splitlines():
-		if not line: continue
 
-		i = 0
-		while i < len(line) and line[i].isdigit() or line[i] is "." or line[i] is " ":
-			i += 1;
+		logger.debug('Will parse: %s', line)
 
-		if i >= len(line): continue
+		# delete unnesesarry chars start string
+		line = re.sub(r'^(\d|[.]|-|\s|\t)*', "", line)
 
-		logger.debug('Will search for: %s', line[i:])
+		# delete unnesesarry chars end string
+		line = re.sub(r'(\s|\t)*$', "", line)
+
+		if not line:
+			logger.debug('Empty line')
+			continue
+		else: logger.debug('Will search for: %s', line)
 
 		try:
-			search = youtube_search(youtube,line[i:])
+			search = youtube_search(youtube,line)
 			if search:
 				videos.append(search[0]) #get first result
 
