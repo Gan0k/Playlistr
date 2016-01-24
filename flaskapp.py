@@ -3,7 +3,6 @@ import playlistr_main as playlistr
 
 app = Flask(__name__)
 app.config.from_pyfile('flaskapp.cfg')
-notfound = 'No videos found'
 
 @app.route('/')
 def form():
@@ -13,7 +12,7 @@ def form():
 @app.route('/', methods=['POST'])
 def form_post():
 	pl = playlistr.make_playlist(request.form.get('text'))
-	if pl == notfound: return notfound
+	if pl == playlistr.NOT_FOUND_MSG: return notfound
 	else: return redirect(pl, code=302)
 
 if __name__ == "__main__":

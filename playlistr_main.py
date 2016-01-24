@@ -2,14 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 YOUTUBE_PLAYLIST_LINK = 'http://www.youtube.com/watch_videos?video_ids='
 DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
+NOT_FOUND_MSG = 'No videos were found :('
 
 def youtube_search(yt, query, max_results=1):
 	# Call the search.list method to retrieve results matching the specified
@@ -20,10 +25,9 @@ def youtube_search(yt, query, max_results=1):
 		maxResults=max_results
 		).execute()
 
-	videos = []
+	logger.info('Query sucsessful')
 
-	# Add each result to the appropriate list, and then display the lists of
-	# matching videos, channels, and playlists.
+	videos = []
 	for search_result in search_response.get("items", []):
 		if search_result["id"]["kind"] == "youtube#video":
 			videos.append(search_result["id"]["videoId"])
@@ -44,7 +48,7 @@ def make_playlist(tracklist):
 
 		if i >= len(line): continue
 
-		print(line[i:])
+		logger.debug('Will search for: %s', line[i:])
 
 		try:
 			search = youtube_search(youtube,line[i:])
@@ -52,9 +56,10 @@ def make_playlist(tracklist):
 				videos.append(search[0]) #get first result
 
 		except HttpError as e:
-			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+			logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
-	if not videos: return 'No videos found'
+	if not videos:
+		return NOT_FOUND_MSG
 	else:
 		return YOUTUBE_PLAYLIST_LINK + ','.join(videos)
 
