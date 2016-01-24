@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect
-import playlistr_main as playlistr
+import playlistr
 
 app = Flask(__name__)
 app.config.from_pyfile('flaskapp.cfg')
