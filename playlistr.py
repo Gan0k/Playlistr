@@ -48,7 +48,7 @@ def make_playlist(tracklist):
 		logger.debug('Will parse: %s', line)
 
 		# delete unnesesarry chars start string
-		line = re.sub(r'^(\d|[.]|-|\s|\t)*', "", line)
+		line = re.sub(r'^(\d|\.|-|\s|\t|:|\[|\])*', "", line)
 
 		# delete unnesesarry chars end string
 		line = re.sub(r'(\s|\t)*$', "", line)
