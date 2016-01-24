@@ -18,6 +18,9 @@ DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
 NOT_FOUND_MSG = 'No videos were found :('
 
 def youtube_search(yt, query, max_results=1):
+
+	logger.debug('Will search for: %s', query)
+
 	# Call the search.list method to retrieve results matching the specified
 	# query term.
 	search_response = yt.search().list(
@@ -26,12 +29,12 @@ def youtube_search(yt, query, max_results=1):
 		maxResults=max_results
 		).execute()
 
-	logger.info('Query sucsessful')
-
 	videos = []
 	for search_result in search_response.get("items", []):
 		if search_result["id"]["kind"] == "youtube#video":
 			videos.append(search_result["id"]["videoId"])
+
+	logger.debug('Video(s) found: %d', len(videos))
 
 	return videos
 
@@ -53,7 +56,6 @@ def make_playlist(tracklist):
 		if not line:
 			logger.debug('Empty line')
 			continue
-		else: logger.debug('Will search for: %s', line)
 
 		try:
 			search = youtube_search(youtube,line)
