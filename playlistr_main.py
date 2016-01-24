@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from keys import *
+import os
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -9,6 +9,7 @@ from apiclient.errors import HttpError
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 YOUTUBE_PLAYLIST_LINK = 'http://www.youtube.com/watch_videos?video_ids='
+DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
 
 def youtube_search(yt, query, max_results=1):
 	# Call the search.list method to retrieve results matching the specified
@@ -46,7 +47,7 @@ def make_playlist(tracklist):
 			if search:
 				videos.append(search[0]) #get first result
 
-		except (HttpError, e):
+		except HttpError as e:
 			print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
 	if not videos: return 'No videos found'
