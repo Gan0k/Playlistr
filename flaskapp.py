@@ -8,8 +8,8 @@ NOT_FOUND_MSG = 'No videos were found :('
 
 @app.route('/')
 def form():
-	css = url_for('static',filename='css/bootstrap.min.css')
-	return render_template('form.html',s=css)
+	bootstrap = url_for('static',filename='css/bootstrap.min.css')
+	return render_template('index.html',bs=bootstrap)
 
 @app.route('/', methods=['POST'])
 def form_post():
