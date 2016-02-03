@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
-YOUTUBE_PLAYLIST_LINK = 'http://www.youtube.com/watch_videos?video_ids='
+YOUTUBE_PLAYLIST_LINK = 'https://www.youtube.com/embed/{:s}?playlist={:s}'
 DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
 
 def youtube_search(yt, query, max_results=1):
@@ -62,5 +62,5 @@ def make_playlist(tracklist):
 		except HttpError as e:
 			logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
-	return YOUTUBE_PLAYLIST_LINK + ','.join(videos) if videos else None
+	return YOUTUBE_PLAYLIST_LINK.format(videos[0],','.join(videos[1:])) if videos else None
 
