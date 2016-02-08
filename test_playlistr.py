@@ -12,7 +12,7 @@ class TestPlaylistr(unittest.TestCase):
 						playlistr.YOUTUBE_API_VERSION,
 						developerKey=playlistr.DEVELOPER_KEY)
 
-		videoId = playlistr.youtube_search(yt,'gangam style')
+		videoId = playlistr.youtube_search('gangam style')
 		self.assertEqual(videoId[0], '9bZkp7q19f0')
 
 	def test_make_playlist1(self):
@@ -27,7 +27,7 @@ class TestPlaylistr(unittest.TestCase):
 			pl = playlistr.make_playlist(tracklist.read())
 			self.assertIn('OPf0YbXqDm0', pl)
 
-    @unittest.skip("Skip test, youtube broken")
+	@unittest.skip("Skip test, youtube broken")
 	def test_make_playlist3(self):
 		script_dir = os.path.dirname(__file__)
 		relative_dir = 'tests/tracklist2.txt'
