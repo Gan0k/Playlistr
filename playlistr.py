@@ -4,6 +4,7 @@
 import os
 import logging
 import re
+import sys, getopt
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -63,4 +64,36 @@ def make_playlist(tracklist):
 			logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
 	return YOUTUBE_PLAYLIST_LINK.format(videos[0],','.join(videos[1:])) if videos else None
+
+def usage(errcode):
+    print('playlistr.py -i <inputfile>')
+    sys.exit(errcode)
+
+if __name__ == "__main__":
+    logger.setLevel(logging.ERROR)
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"hi:",["help","ifile="])
+    except getopt.GetoptError as err:
+        print(err)
+        usage(2)
+
+    inputfile = None
+    for opt, arg in opts:
+        if opt in ('-h','--help'):
+            usage(0)
+        elif opt in ('-i', '--ifile'):
+            inputfile = arg
+        else:
+            usage(2)
+
+    if inputfile is None:
+        usage(2)
+    else:
+        with open(os.getcwd() + '/' + inputfile,'r') as f:
+            link = make_playlist(f.read())
+            print()
+            print()
+            print('Playlist Link:')
+            print(link)
 
