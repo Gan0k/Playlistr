@@ -17,17 +17,19 @@ YOUTUBE_API_VERSION = "v3"
 YOUTUBE_PLAYLIST_LINK = 'https://www.youtube.com/embed/{:s}?playlist={:s}'
 DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
 
-def youtube_search(yt, query, max_results=1):
+def youtube_search(query, max_results=1):
+	youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+		developerKey=DEVELOPER_KEY)
 
 	logger.debug('Will search for: %s', query)
 
 	# Call the search.list method to retrieve results matching the specified
 	# query term.
-	response = yt.search().list(
+	response = youtube.search().list(
 		q=query,
 		part="id",
 		maxResults=max_results,
-		type="video",
+		type="video"
 		).execute()
 
 	videos = [res["id"]["videoId"] for res in response.get("items", [])]
@@ -38,8 +40,6 @@ def youtube_search(yt, query, max_results=1):
 
 def make_playlist(tracklist):
 	videos = []
-	youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-		developerKey=DEVELOPER_KEY)
 
 	for line in tracklist.splitlines():
 
@@ -56,7 +56,7 @@ def make_playlist(tracklist):
 			continue
 
 		try:
-			search = youtube_search(youtube,line)
+			search = youtube_search(line)
 			if search:
 				videos.append(search[0]) #get first result
 
