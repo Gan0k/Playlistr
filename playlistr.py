@@ -18,52 +18,52 @@ YOUTUBE_PLAYLIST_LINK = 'https://www.youtube.com/embed/{:s}?playlist={:s}'
 DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
 
 def youtube_search(query, max_results=1):
-	youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-		developerKey=DEVELOPER_KEY)
+    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+            developerKey=DEVELOPER_KEY)
 
-	logger.debug('Will search for: %s', query)
+    logger.debug('Will search for: %s', query)
 
-	# Call the search.list method to retrieve results matching the specified
-	# query term.
-	response = youtube.search().list(
-		q=query,
-		part="id",
-		maxResults=max_results,
-		type="video"
-		).execute()
+    # Call the search.list method to retrieve results matching the specified
+    # query term.
+    response = youtube.search().list(
+            q=query,
+            part="id",
+            maxResults=max_results,
+            type="video"
+            ).execute()
 
-	videos = [res["id"]["videoId"] for res in response.get("items", [])]
+    videos = [res["id"]["videoId"] for res in response.get("items", [])]
 
-	logger.debug('Video(s) found: %d', len(videos))
+    logger.debug('Video(s) found: %d', len(videos))
 
-	return videos
+    return videos
 
 def make_playlist(tracklist):
-	videos = []
+    videos = []
 
-	for line in tracklist.splitlines():
+    for line in tracklist.splitlines():
 
-		logger.debug('Will parse: %s', line)
+        logger.debug('Will parse: %s', line)
 
-		# delete unnesesarry chars start string
-		line = re.sub(r'^(\d|\.|-|\s|\t|:|\[|\])*', "", line)
+        # delete unnesesarry chars start string
+        line = re.sub(r'^(\d|\.|-|\s|\t|:|\[|\])*', "", line)
 
-		# delete unnesesarry chars end string
-		line = re.sub(r'(\s|\t)*$', "", line)
+        # delete unnesesarry chars end string
+        line = re.sub(r'(\s|\t)*$', "", line)
 
-		if not line:
-			logger.debug('Empty line')
-			continue
+        if not line:
+            logger.debug('Empty line')
+            continue
 
-		try:
-			search = youtube_search(line)
-			if search:
-				videos.append(search[0]) #get first result
+        try:
+            search = youtube_search(line)
+            if search:
+                videos.append(search[0]) #get first result
 
-		except HttpError as e:
-			logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+        except HttpError as e:
+            logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
-	return YOUTUBE_PLAYLIST_LINK.format(videos[0],','.join(videos[1:])) if videos else None
+    return YOUTUBE_PLAYLIST_LINK.format(videos[0],','.join(videos[1:])) if videos else None
 
 def usage(errcode):
     print('playlistr.py -i <inputfile>')
