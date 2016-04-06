@@ -24,13 +24,14 @@ class TestPlaylistr(unittest.TestCase):
 
     def test_make_playlist1(self):
         tracklist = '    01. gangam style \n  \t never gonna give '
-        assert_video_in_list(tracklist,'9bZkp7q19f0')
+        pl = playlistr.make_playlist(tracklist)
+        self.assertIn('9bZkp7q19f0', pl)
 
     def test_make_playlist2(self):
-        assert_video_in_list('datalists/tracklist1.txt','OPf0YbXqDm0')
+        self.assert_video_in_list('OPf0YbXqDm0','datalists/tracklist1.txt')
 
     def test_make_playlist3(self):
-        assert_video_in_list('datalists/tracklist2.txt','mxvG-_KvWlw')
+        self.assert_video_in_list('mxvG-_KvWlw','datalists/tracklist2.txt')
 
 class TestFlask(unittest.TestCase):
 
