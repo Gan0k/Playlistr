@@ -6,11 +6,12 @@ from flaskapp import app
 
 import playlistr
 
+
 class TestPlaylistr(unittest.TestCase):
 
     def assert_video_in_list(self, videoId, relative_dir):
         script_dir = os.path.dirname(__file__)
-        with open(os.path.join(script_dir,relative_dir),'r') as tracklist:
+        with open(os.path.join(script_dir, relative_dir), 'r') as tracklist:
             pl = playlistr.make_playlist(tracklist.read())
             self.assertIn(videoId, pl)
 
@@ -28,10 +29,11 @@ class TestPlaylistr(unittest.TestCase):
         self.assertIn('9bZkp7q19f0', pl)
 
     def test_make_playlist2(self):
-        self.assert_video_in_list('OPf0YbXqDm0','datalists/tracklist1.txt')
+        self.assert_video_in_list('OPf0YbXqDm0', 'datalists/tracklist1.txt')
 
     def test_make_playlist3(self):
-        self.assert_video_in_list('mxvG-_KvWlw','datalists/tracklist2.txt')
+        self.assert_video_in_list('mxvG-_KvWlw', 'datalists/tracklist2.txt')
+
 
 class TestFlask(unittest.TestCase):
 

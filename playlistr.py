@@ -4,7 +4,8 @@
 import os
 import logging
 import re
-import sys, getopt
+import sys
+import getopt
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -14,12 +15,13 @@ logger = logging.getLogger(__name__)
 
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
-YOUTUBE_PLAYLIST_LINK = 'https://www.youtube.com/embed/{:s}?playlist={:s}'
+YOUTUBE_LINK = 'https://www.youtube.com/embed/{:s}?playlist={:s}'
 DEVELOPER_KEY = os.environ.get('YOUTUBE_API_KEY')
+
 
 def youtube_search(query, max_results=1):
     youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-            developerKey=DEVELOPER_KEY)
+                    developerKey=DEVELOPER_KEY)
 
     logger.debug('Will search for: %s', query)
 
@@ -37,6 +39,7 @@ def youtube_search(query, max_results=1):
     logger.debug('Video(s) found: %d', len(videos))
 
     return videos
+
 
 def make_playlist(tracklist):
     videos = []
@@ -58,12 +61,14 @@ def make_playlist(tracklist):
         try:
             search = youtube_search(line)
             if search:
-                videos.append(search[0]) #get first result
+                #get first result
+                videos.append(search[0])
 
         except HttpError as e:
             logger.error("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
 
-    return YOUTUBE_PLAYLIST_LINK.format(videos[0],','.join(videos[1:])) if videos else None
+    return YOUTUBE_LINK.format(videos[0], ','.join(videos[1:])) if videos else None
+
 
 def usage(errcode):
     print('playlistr.py -i <inputfile>')
@@ -73,14 +78,14 @@ if __name__ == "__main__":
     logger.setLevel(logging.ERROR)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hi:",["help","ifile="])
+        opts, args = getopt.getopt(sys.argv[1:], "hi:", ["help","ifile="])
     except getopt.GetoptError as err:
         print(err)
         usage(2)
 
     inputfile = None
     for opt, arg in opts:
-        if opt in ('-h','--help'):
+        if opt in ('-h', '--help'):
             usage(0)
         elif opt in ('-i', '--ifile'):
             inputfile = arg
@@ -90,7 +95,7 @@ if __name__ == "__main__":
     if inputfile is None:
         usage(2)
     else:
-        with open(os.getcwd() + '/' + inputfile,'r') as f:
+        with open(os.getcwd() + '/' + inputfile, 'r') as f:
             link = make_playlist(f.read())
             print()
             print()
