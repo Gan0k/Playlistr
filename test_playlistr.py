@@ -8,6 +8,12 @@ import playlistr
 
 class TestPlaylistr(unittest.TestCase):
 
+    def assert_video_in_list(self, videoId, relative_dir):
+        script_dir = os.path.dirname(__file__)
+        with open(os.path.join(script_dir,relative_dir),'r') as tracklist:
+            pl = playlistr.make_playlist(tracklist.read())
+            self.assertIn(videoId, pl)
+
     def test_youtube_search(self):
         yt = build(playlistr.YOUTUBE_API_SERVICE_NAME,
                                         playlistr.YOUTUBE_API_VERSION,
@@ -18,22 +24,13 @@ class TestPlaylistr(unittest.TestCase):
 
     def test_make_playlist1(self):
         tracklist = '    01. gangam style \n  \t never gonna give '
-        pl = playlistr.make_playlist(tracklist)
-        self.assertIn('9bZkp7q19f0', pl)
+        assert_video_in_list(tracklist,'9bZkp7q19f0')
 
     def test_make_playlist2(self):
-        script_dir = os.path.dirname(__file__)
-        relative_dir = 'tests/tracklist1.txt'
-        with open(os.path.join(script_dir,relative_dir),'r') as tracklist:
-            pl = playlistr.make_playlist(tracklist.read())
-            self.assertIn('OPf0YbXqDm0', pl)
+        assert_video_in_list('datalists/tracklist1.txt','OPf0YbXqDm0')
 
     def test_make_playlist3(self):
-        script_dir = os.path.dirname(__file__)
-        relative_dir = 'tests/tracklist2.txt'
-        with open(os.path.join(script_dir,relative_dir),'r') as tracklist:
-            pl = playlistr.make_playlist(tracklist.read())
-            self.assertIn('mxvG-_KvWlw', pl)
+        assert_video_in_list('datalists/tracklist2.txt','mxvG-_KvWlw')
 
 class TestFlask(unittest.TestCase):
 

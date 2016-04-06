@@ -17,4 +17,4 @@ ratings:
   - "**.js"
   - "**.py"
 exclude_paths:
-- tests/
+- datalists/
